@@ -10,6 +10,7 @@ class EnigmaTest < Minitest::Test
 
   def test_encrypt
     e = Enigma.new
+    require "pry"; binding.pry
     assert_equal e.encrypt("A long, long time ago...  ..end.."), ".<o@]x#b)5q6m l,#<d6,>@cm<@c#4gcn"
   end
 end
