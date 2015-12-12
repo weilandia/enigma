@@ -8,25 +8,8 @@ require_relative '../lib/crack'
 
 class EnigmaTest < Minitest::Test
 
-  def test_first_encryption
-    require "pry"; binding.pry
-    test = Enigma.new
+  def test_encrypt
+    e = Enigma.new
+    assert_equal e.encrypt("A long, long time ago...  ..end.."), ".<o@]x#b)5q6m l,#<d6,>@cm<@c#4gcn"
   end
-
-  def rotate
-
-  end
-
-  def second_encryption
-
-  end
-
-  def third_encryption
-
-  end
-
-  def encryption
-
-  end
-
 end
