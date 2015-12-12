@@ -2,27 +2,22 @@
 require_relative '../lib/turing'
 require_relative '../lib/crack'
 # Extra characters: !@#$%^&*()[],.<>;:/?\|
-class Enigma
+class Enigma < Turing
   attr_reader :encrypted_message
+
   def initialize
-    @set = "abcdefghijklmnopqrstuvwxyz0123456789 .,"
-    @date = Time.now.strftime("%m%d%y").to_i
+    @set = "abcdefghijklmnopqrstuvwxyz0123456789 .,!@#$%^&*()[],.<>;:/?\\\|"
   end
 
 # Testing Key: 37621, Testing Date: 121015
-  def encrypt(message = File.read("message.txt"), key=rand.to_s[2..6], date=@date)
+  def encrypt(message = File.read("message.txt"), key = rand.to_s[2..6], date = Time.now.strftime("%m%d%y").to_i)
     key = key.to_s
-    rotation_engine(key_encrypt(key),date_encrypt(date))
+    rotation_array = rotation_engine(key_encrypt(key),date_encrypt(date))
     encrypt_i = first_encryption(message)
-    rotate(encrypt_i)
-    encrypt_ii = second_encryption
+    rotated_message = rotate(encrypt_i, rotation_array)
+    encrypt_ii = second_encryption(rotated_message)
     encrypt_iii = third_encryption(encrypt_ii)
     fourth_encryption(encrypt_iii)
-  end
-
-  def date_encrypt(date)
-    date_offset = (date ** 2).to_s[-4..-1].split("").map {|i| i.to_i}
-    date_offset
   end
 
   def key_encrypt(key)
@@ -30,16 +25,17 @@ class Enigma
     b = key[1..2].to_i
     c = key[2..3].to_i
     d = key[3..4].to_i
-    offsets = [a,b,c,d]
-    offsets
+    key_offset = [a,b,c,d]
+    key_offset
+  end
+
+  def date_encrypt(date)
+    date_offset = (date ** 2).to_s[-4..-1].split("").map {|i| i.to_i}
+    date_offset
   end
 
   def rotation_engine(key_offset,date_offset)
     rotation_array = key_offset.zip(date_offset).map {|i| i.inject(:+)}
-    @rotation_a = rotation_array[0]
-    @rotation_b = rotation_array[1]
-    @rotation_c = rotation_array[2]
-    @rotation_d = rotation_array[3]
     rotation_array
   end
 
@@ -51,49 +47,53 @@ class Enigma
     encrypt_i
   end
 
-  def rotate(input)
-    ac = input.select.with_index do |x,i|
+  def rotate(encrypt_i, rotation_array)
+
+    ac = encrypt_i.select.with_index do |x,i|
       x if i % 2 == 0
     end
 
-    bd = input.select.with_index do |x,i|
+    bd = encrypt_i.select.with_index do |x,i|
       x if i % 2 != 0
     end
 
-    @a = ac.select.with_index do |x,i|
+    a = ac.select.with_index do |x,i|
       x if i % 2 == 0
-    end.map! {|x| x + @rotation_a}
+    end.map! {|x| x + rotation_array[0]}
 
-    @b = bd.select.with_index do |x,i|
+    b = bd.select.with_index do |x,i|
       x if i % 2 == 0
-    end.map! {|x| x + @rotation_b}
+    end.map! {|x| x + rotation_array[1]}
 
-    @c = ac.select.with_index do |x,i|
+    c = ac.select.with_index do |x,i|
       x if i % 2 != 0
-    end.map! {|x| x + @rotation_c}
+    end.map! {|x| x + rotation_array[2]}
 
-    @d = bd.select.with_index do |x,i|
+    d = bd.select.with_index do |x,i|
       x if i % 2 != 0
-    end.map! {|x| x + @rotation_d}
+    end.map! {|x| x + rotation_array[3]}
+
+    rotated_message = [a, b, c, d]
+    rotated_message
   end
 
-  def second_encryption
+  def second_encryption(rotated_message)
     encrypt_ii = []
 
-    @a.each do |x|
+    rotated_message[0].each do |x|
       encrypt_ii << x
     end
 
     first = encrypt_ii.each_with_index.map do |x, i|
-      [x,@b[i]]
+      [x,rotated_message[1][i]]
     end
 
     second = first.each_with_index.map do |x,i|
-      [x,@c[i]]
+      [x,rotated_message[2][i]]
     end
 
     third = second.each_with_index.map do |x,i|
-      [x,@d[i]]
+      [x,rotated_message[3][i]]
     end
 
     encrypt_ii = third.flatten.compact
@@ -103,10 +103,10 @@ class Enigma
     encrypt_iii = []
     encrypt_iii = input.map do |number|
       # 61 with extra characters, 39 without
-      if number <= 39
+      if number <= 61
         number
       else
-        number % 39
+        number % 61
       end
     end
     encrypt_iii

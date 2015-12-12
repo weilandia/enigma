@@ -1,0 +1,25 @@
+
+
+
+
+
+
+
+Method Descriptions
+Enigma.initialize: initializes the instance variable @set, which is the set of characters that will be understood and used in the encryption.
+*If you would like to add or remove characters, be sure to change the total number of characters used in Enigma.third_encryption, accordingly.
+
+Enigma.encrypt: This method takes the following three arguments: the string message that needs to be encrypted, a five digit numeric encryption key, and a date as an integer formatted as %m%d%y.  Outside of the purposes of testing, the default values for .encrypt will suffice as they load a message from a file named "message.txt", generate a random key, and generate a date.
+
+Enigma.encrypt proceeds to call a series of methods that rely on each other's outputs in order to encrypt the message.
+
+Enigma.key_encrypt: This method is indirectly called by Enigma.encrypt and takes the key passed into Enigma.encrypt as its argument. Enigma.key_encrypt then translates the key into an array defined as key_offset.  The key_offset can be understood in the following example: Key = 38274; Key Offset = [38,82,27,74].
+
+Enigma.date_encrypt: This method is indirectly called by Enigma.encrypt and takes the date passed into Enigma.encrypt as its argument. Enigma.date_encrypt then translates the date into an array defined as date_offset. The date_offset can be understood in the following example: Date = 121015; Date ** 2 == 14644630225; the last four digits of Date ** 2 == 0225; date_offset = [0,2,2,5].
+
+Enigma.rotation_engine: This is the first method called directly by Enigma.encrypt, which in turn takes the two methods described above (key_encrypt and date_encrypt) as arguments. Enigma.rotation_engine defines rotation_array as the sum of the corresponding indices of key_offset and date_offset. This is array will used to define how to rotate individual characters in a message as it is being encrypted.
+
+Enigma.first_encryption: This method is the second method called by Enigma.encrypt and serves as the instruction for translating a message's characters into their corresponding indices of @set. Example: "Hi" => [7, 8]
+
+Enigma.rotate: This method is called by Enigma.encrypt after .first_encryption is called and takes the output of .first_encryption as its argument. Enigma.rotate takes the first encryption and translates it into four arrays: @a, @b, @c and @d.  These arrays are populated by every fourth character in the message being encrypted and then each of those characters is added to a corresponding value in @rotation_a, @rotation_b, @rotation_c, or @rotation_d, where @a is mapped to @rotation_a, etc.  For example:
+[1, 2, 3, 4, 1, 2, 3, 4].rotate => @a=[1 + @rotation_a, 1 + @rotation_a], @b=[2 + @rotation_b, 2 + @rotation_b], @c=[3 + @rotation_c, 3 + @rotation_c], @d=[4 + @rotation_d, 4 + @rotation_d]

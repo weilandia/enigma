@@ -1,3 +1,4 @@
+require_relative '../lib/crack'
 
-class Turing
+class Turing < Crack
 end
