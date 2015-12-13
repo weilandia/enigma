@@ -1,3 +1,4 @@
+require_relative '../lib/decrypt'
 
-class Crack
+class Crack < Decrypt
 end
