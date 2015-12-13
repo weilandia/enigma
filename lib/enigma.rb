@@ -8,7 +8,7 @@ class Enigma < Turing
   end
 
 # Testing Key: 37621, Testing Date: 121015
-  def encrypt(message = File.read("message.txt"), key = rand.to_s[2..6], date = Time.now.strftime("%m%d%y").to_i)
+  def encrypt(message = File.read("message.txt"), key = rand.to_s[2..6], date = Time.now.strftime("%-m%d%y").to_i)
     key = key.to_s
     rotation_array = rotation_engine(key_encrypt(key),date_encrypt(date))
     encrypt_i = first_encryption(message)

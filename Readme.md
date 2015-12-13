@@ -46,11 +46,11 @@ The offsets and keys can be calculated by the same methods above. Then each char
 When the key is not known, the offsets can still be calculated from the message
 date. We believe that each enemy message ends with the characters `"..end.."`. Use that to determine when you've correctly guessed the key.
 
+<br>
 Testing
 -------
 Testing is setup to use Minitest, rspec and mrspec. I recommend testing with mrspec. To do so, simply run 'mrspec' in the project root directory after downloading the mrspec gem.
-<br>
-<br>
+
 <br>
 Method Descriptions:
 --------------------
@@ -113,3 +113,9 @@ This method is called by Enigma.encrypt after .second_encryption and takes the o
 
 ####Enigma.fourth_encryption:
 This method is called by Enigma.encrypt after .third_encryption and takes the output of .third_encryption (encrypt_iii) as its argument. The purpose of this method is to translate encrypt_iii to the actual characters in `@set`, by mapping to `@set's` indices. Enigma.fourth_encryption  then formats the encrypted message into a string and outputs the encryption to the screen and to the file 'encrypted_message.txt'.
+
+<br>
+###Class: TURING
+
+<br>
+###Class: CRACK
