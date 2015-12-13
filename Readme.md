@@ -1,12 +1,16 @@
-Project: Enigma
-By: Nick Weiland
+Enigma
+=======
 
-Purpose: Enigma is an encryption engine for encrypting, decrypting, and cracking
+Enigma is an encryption engine for encrypting, decrypting, and cracking
 messages, loosely based on the encryption algorithm used by the Enigma Machine during WWII. The project requires only Ruby.
 
-Testing: Testing is setup to use Minitest, rspec and mrspec. I recommend testing with mrspec. To do so, simply run 'mrspec' in the project root directory after downloading the mrspec gem.
+Testing
+-------
+Testing is setup to use Minitest, rspec and mrspec. I recommend testing with mrspec. To do so, simply run 'mrspec' in the project root directory after downloading the mrspec gem.
 
 Method Descriptions:
+--------------------
+
 Class: ENIGMA
 Enigma.initialize: initializes the instance variable @set, which is the set of characters that will be understood and used in the encryption.
 *If you would like to add or remove characters, be sure to change the total number of characters used in Enigma.third_encryption, accordingly.
