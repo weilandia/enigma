@@ -3,14 +3,14 @@ Enigma
 
 Enigma is an encryption engine for encrypting, decrypting, and cracking
 messages, loosely based on the encryption algorithm used by the Enigma Machine during WWII. The project is written entirely in Ruby.
-
+<br>
+<br>
 Testing
 -------
 Testing is setup to use Minitest, rspec and mrspec. I recommend testing with mrspec. To do so, simply run 'mrspec' in the project root directory after downloading the mrspec gem.
-
-
-
-
+<br>
+<br>
+<br>
 Method Descriptions:
 --------------------
 ###Class: ENIGMA
