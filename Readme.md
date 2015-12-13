@@ -61,7 +61,7 @@ Initializes the instance variable @set, which is the set of characters that will
 If you would like to add or remove characters, be sure to change the total number of characters used in Enigma.third_encryption, accordingly.
 
 ####Enigma.encrypt:
-This method takes the following three arguments: a string message that needs to be encrypted, a five digit numeric encryption key, and a date as an integer formatted as %m%d%y.  Outside of the purposes of testing, the default values for .encrypt will suffice as they load a message from a file named "message.txt", generate a random key, and generate a date.
+This method takes the following three arguments: a string message that needs to be encrypted (This message can be manually inputed, or will be read from ARGV[0]. If ARGV[0] is nil, the message will be read from message.txt), a five digit numeric encryption key, and a date as an integer formatted as %m%d%y.  Outside of the purposes of testing, the default values for .encrypt will suffice as they load a message from a file named "message.txt", generate a random key, and generate a date.
 
 Enigma.encrypt proceeds to call a series of methods that rely on each other's outputs in order to encrypt the message.
 
@@ -112,7 +112,13 @@ Here we see what is happening in this method: when we iterate over encrypt_ii wi
 This method is called by Enigma.encrypt after .second_encryption and takes the output of .second_encryption (encrypt_ii) as its argument. The purpose of this method is to reduce the values of each element in encrypt_ii to values that can be mapped to `@set`. Enigma.third_encryption simply outputs a new array that has changed only the elements that are greater than the total number of characters in `@set`. If an element in encrypt_ii is greater that the total number of characters in `@set`, that element is changed to the remainder of that element/@set.length.
 
 ####Enigma.fourth_encryption:
-This method is called by Enigma.encrypt after .third_encryption and takes the output of .third_encryption (encrypt_iii) as its argument. The purpose of this method is to translate encrypt_iii to the actual characters in `@set`, by mapping to `@set's` indices. Enigma.fourth_encryption  then formats the encrypted message into a string and outputs the encryption to the screen and to the file 'encrypted_message.txt'.
+This method is called by Enigma.encrypt after .third_encryption and takes the output of .third_encryption (encrypt_iii) as its argument. The purpose of this method is to translate encrypt_iii to the actual characters in `@set`, by mapping to `@set's` indices. Enigma.fourth_encryption  then formats the encrypted message into a string and outputs the encryption to the screen and either to ARGV[1] or, if ARGV[1] is nil, to the file 'encrypted.txt'.
+
+####Enigma.input_file
+This method gives instructions to Enigma.encrypt as to where it should find the message to encrypt. It will first look in ARGV[0]. If ARGV[0] is nil, it will read message.txt. The message can also be manually inputted as an argument for Enigma.encrypt.
+
+####Enigma.output_file
+This method gives instructions to Enigma.fourth_encryption as to where it should write the file containing the encrypted message. It will first try to write to ARGV[1]. If ARGV[1] is nil, it will write to encrypted.txt.
 
 <br>
 ###Class: TURING
