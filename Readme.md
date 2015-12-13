@@ -1,14 +1,10 @@
 Enigma
 =======
 
-Enigma is an encryption engine for encrypting, decrypting, and cracking
-messages, loosely based on the encryption algorithm used by the Enigma Machine during WWII. The project is written entirely in Ruby.
-
-### Encryption Notes
+Enigma is an encryption engine written in Ruby  loosely based on the encryption algorithm used by the Enigma Machine during WWII.
 
 The encryption is based on rotation. The character map is made up of all the
-lowercase letters, then the numbers, then space, then period, then comma. New
-lines will not appear in the message nor character map.
+characters defined in `@set`.
 
 #### The Key
 
@@ -46,8 +42,6 @@ The offsets and keys can be calculated by the same methods above. Then each char
 When the key is not known, the offsets can still be calculated from the message
 date. We believe that each enemy message ends with the characters `"..end.."`. Use that to determine when you've correctly guessed the key.
 
-<br>
-<br>
 Testing
 -------
 Testing is setup to use Minitest, rspec and mrspec. I recommend testing with mrspec. To do so, simply run 'mrspec' in the project root directory after downloading the mrspec gem.
