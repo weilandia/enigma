@@ -1,10 +1,14 @@
 Enigma
 =======
 
-Enigma is an encryption engine written in Ruby  loosely based on the encryption algorithm used by the Enigma Machine during WWII.
+Enigma is an encryption engine for encrypting, decrypting, and cracking
+messages. The encryption is loosely based on the encryption algorithm used by the Enigma Machine during WWII.
 
-The encryption is based on rotation. The character map is made up of all the
-characters defined in `@set`.
+#### Encryption Set
+
+* The encryption is based on rotation
+* The character map is made up of all the
+characters defined in `@set`
 
 #### The Key
 
