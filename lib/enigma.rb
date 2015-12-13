@@ -3,13 +3,15 @@ require_relative '../lib/turing'
 require_relative '../lib/crack'
 # Extra characters: !@#$%^&*()[],.<>;:/?\\\|
 class Enigma < Turing
+  attr_reader :key, :date
   def initialize
     @set = "abcdefghijklmnopqrstuvwxyz0123456789 .,!@#$%^&*()[],.<>;:/?\\\|"
   end
 
 # Testing Key: 37621, Testing Date: 121015
   def encrypt(message = input_file, key = rand.to_s[2..6], date = Time.now.strftime("%-m%d%y").to_i)
-    key = key.to_s
+    @key = key.to_i
+    @date = date
     rotation_array = rotation_engine(key_encrypt(key),date_encrypt(date))
     encrypt_i = first_encryption(message)
     rotated_message = rotate(encrypt_i, rotation_array)
@@ -136,3 +138,7 @@ class Enigma < Turing
     end
   end
 end
+
+e = Enigma.new
+e.encrypt
+puts "Created 'encrypted.txt' with the key #{e.key} and date #{e.date}"

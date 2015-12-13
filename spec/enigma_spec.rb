@@ -16,11 +16,11 @@ class EnigmaTest < Minitest::Test
   end
 
   def test_key_encrypt
-    assert_equal [56,67,73,38], @e.key_encrypt("56738")
+    assert_equal [56,67,73,38], @e.key_encrypt(@key)
   end
 
   def test_date_encrypt
-    assert_equal [6,2,2,5], @e.date_encrypt(121215)
+    assert_equal [6,2,2,5], @e.date_encrypt(@date)
   end
 
   def test_rotation_engine
