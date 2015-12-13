@@ -1,10 +1,8 @@
 
 require_relative '../lib/turing'
 require_relative '../lib/crack'
-# Extra characters: !@#$%^&*()[],.<>;:/?\|
+# Extra characters: !@#$%^&*()[],.<>;:/?\\\|
 class Enigma < Turing
-  attr_reader :encrypted_message
-
   def initialize
     @set = "abcdefghijklmnopqrstuvwxyz0123456789 .,!@#$%^&*()[],.<>;:/?\\\|"
   end
@@ -99,9 +97,9 @@ class Enigma < Turing
     encrypt_ii = third.flatten.compact
   end
 
-  def third_encryption(input)
+  def third_encryption(encrypt_ii)
     encrypt_iii = []
-    encrypt_iii = input.map do |number|
+    encrypt_iii = encrypt_ii.map do |number|
       # 61 with extra characters, 39 without
       if number <= 61
         number
@@ -112,11 +110,13 @@ class Enigma < Turing
     encrypt_iii
   end
 
-  def fourth_encryption(input)
+  def fourth_encryption(encrypt_iii)
     encrypt_iv = []
-    input.map do |number|
+    encrypt_iii.map do |number|
       encrypt_iv << @set[number]
       end
-    @encrypted_message = encrypt_iv.join("")
+    encrypted_message = encrypt_iv.join("")
+    File.write("encrypted_message.txt", encrypted_message)
+    encrypted_message
   end
 end
