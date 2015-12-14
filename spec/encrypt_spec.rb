@@ -25,7 +25,7 @@ class EncryptTest < Minitest::Test
   end
 
   def test_first_encryption
-    assert_equal [7,4,11,11,14], @e.first_encryption("Hello")
+    assert_equal [7,4,11,11,14], @e.set_index_translation("Hello")
   end
 
   def test_rotate

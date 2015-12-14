@@ -1,5 +1,5 @@
 
-# Extra characters: !@#$%^&*()[],.<>;:/?\\\|
+# Extra characters: !@#$%^&*()[],.<>;:/?\\\|'
 class Encrypt
   attr_reader :key, :date
   def initialize
@@ -11,7 +11,7 @@ class Encrypt
     @key = key.to_i
     @date = date
     rotation_array = rotation_engine(key_encrypt(key),date_encrypt(date))
-    encrypt_i = first_encryption(message)
+    encrypt_i = set_index_translation(message)
     rotated_message = rotate(encrypt_i, rotation_array)
     encrypt_ii = realign_array(rotated_message)
     encrypt_iii = third_encryption(encrypt_ii)
@@ -38,39 +38,39 @@ class Encrypt
     rotation_array
   end
 
-  def first_encryption(message)
-    encrypt_i = []
+  def set_index_translation(message)
+    set_indices = []
     message.downcase.split("").map do |letter|
-      encrypt_i << @set.index(letter)
+      set_indices << @set.index(letter)
     end
-    encrypt_i
+    set_indices
   end
 
-  def rotate(encrypt_i, rotation_array)
+  def rotate(index_translation, rotation)
 
-    ac = encrypt_i.select.with_index do |x,i|
+    ac = index_translation.select.with_index do |x,i|
       x if i % 2 == 0
     end
 
-    bd = encrypt_i.select.with_index do |x,i|
+    bd = index_translation.select.with_index do |x,i|
       x if i % 2 != 0
     end
 
     a = ac.select.with_index do |x,i|
       x if i % 2 == 0
-    end.map! {|x| x + rotation_array[0]}
+    end.map! {|x| x + rotation[0]}
 
     b = bd.select.with_index do |x,i|
       x if i % 2 == 0
-    end.map! {|x| x + rotation_array[1]}
+    end.map! {|x| x + rotation[1]}
 
     c = ac.select.with_index do |x,i|
       x if i % 2 != 0
-    end.map! {|x| x + rotation_array[2]}
+    end.map! {|x| x + rotation[2]}
 
     d = bd.select.with_index do |x,i|
       x if i % 2 != 0
-    end.map! {|x| x + rotation_array[3]}
+    end.map! {|x| x + rotation[3]}
 
     rotated_message = [a, b, c, d]
     rotated_message
@@ -101,7 +101,7 @@ class Encrypt
   def third_encryption(encrypt_ii)
     encrypt_iii = []
     encrypt_iii = encrypt_ii.map do |number|
-      # 58,59 with extra characters, 38,39 without
+      # 59,60 with extra characters, 38,39 without
       if number <= 58
         number
       else
