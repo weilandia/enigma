@@ -160,7 +160,7 @@ Improve your system so it supports all of the following:
 * all lowercase letters
 * all numbers
 * spaces
-* these symbols: `!@#$%^&*()[],.<>;:/?\|`
+* these symbols: `!@#$%^&*()[]<>;:/?\|`
 
 ## Evaluation Rubric
 

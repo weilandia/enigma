@@ -21,7 +21,7 @@ class EncryptTest < Minitest::Test
   end
 
   def test_rotation_engine
-    assert_equal [74,37,17,17], @e.rotation_engine([73,37,13,8], [1,0,4,9])
+    assert_equal [62,69,75,43], @e.rotation_engine([56,67,73,38], [6,2,2,5])
   end
 
   def test_first_encryption
@@ -29,22 +29,22 @@ class EncryptTest < Minitest::Test
   end
 
   def test_rotate
-    assert_equal [[81,88],[41],[28],[28]], @e.rotate([7,4,11,11,14],[74,37,17,17])
+    assert_equal [[69, 76],[73],[86],[54]], @e.rotate([7,4,11,11,14],[62,69,75,43])
   end
 
-  def test_second_encryption
-    assert_equal [81,41,28,28,88], @e.second_encryption([[81,88],[41],[28],[28]])
+  def test_realign_array
+    assert_equal [69,73,86,54,76], @e.realign_array([[69, 76],[73],[86],[54]])
   end
 
   def test_third_encryption
-    assert_equal [20,41,28,28,27], @e.third_encryption([81,41,28,28,88])
+    assert_equal [10,14,27,54,17], @e.third_encryption([69,73,86,54,76])
   end
 
-  def test_fourth_encryption
-    assert_equal "u#221", @e.fourth_encryption([20,41,28,28,27])
+  def test_set_translate
+    assert_equal "ko1:r", @e.set_translate([10,14,27,54,17])
   end
 
   def test_encrypt
-    assert_equal "xm]&bv]/ot,stmssb^6]pz7seq6bbvq(.iv(bl,", @e.encrypt(@message, @key, @date)
+    assert_equal "zo>&dx>\\qv@uvouud*8]r19ugs8ddxs(!kx(dn;", @e.encrypt(@message, @key, @date)
   end
 end

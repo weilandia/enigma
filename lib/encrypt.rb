@@ -3,7 +3,7 @@
 class Encrypt
   attr_reader :key, :date
   def initialize
-    @set = "abcdefghijklmnopqrstuvwxyz0123456789 .,!@#$%^&*()[],.<>;:/?\\\|"
+    @set = "abcdefghijklmnopqrstuvwxyz0123456789 .,!@#$%^&*()[]<>;:/?\\\|"
   end
 
 # Testing Key: 37621, Testing Date: 121015
@@ -13,9 +13,10 @@ class Encrypt
     rotation_array = rotation_engine(key_encrypt(key),date_encrypt(date))
     encrypt_i = first_encryption(message)
     rotated_message = rotate(encrypt_i, rotation_array)
-    encrypt_ii = second_encryption(rotated_message)
+    encrypt_ii = realign_array(rotated_message)
     encrypt_iii = third_encryption(encrypt_ii)
-    fourth_encryption(encrypt_iii)
+    encrypt_iv = set_translate(encrypt_iii)
+    fourth_encryption(encrypt_iv)
   end
 
   def key_encrypt(key)
@@ -75,7 +76,7 @@ class Encrypt
     rotated_message
   end
 
-  def second_encryption(rotated_message)
+  def realign_array(rotated_message)
     encrypt_ii = []
 
     rotated_message[0].each do |x|
@@ -100,24 +101,28 @@ class Encrypt
   def third_encryption(encrypt_ii)
     encrypt_iii = []
     encrypt_iii = encrypt_ii.map do |number|
-      # 61 with extra characters, 39 without
-      if number <= 61
+      # 58,59 with extra characters, 38,39 without
+      if number <= 58
         number
       else
-        number % 61
+        number % 59
       end
     end
     encrypt_iii
   end
 
-  def fourth_encryption(encrypt_iii)
-    encrypt_iv = []
-    encrypt_iii.map do |number|
-      encrypt_iv << @set[number]
+  def set_translate(set_index_message)
+    set_translate = []
+    set_index_message.map do |number|
+      set_translate << @set[number]
       end
-    encrypted_message = encrypt_iv.join("")
-    output_encryption(encrypted_message)
-    encrypted_message
+    message = set_translate.join("")
+    message
+  end
+
+  def fourth_encryption(message)
+    output_encryption(message)
+    message
   end
 
   def input_message
