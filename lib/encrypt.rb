@@ -142,6 +142,14 @@ class Encrypt
   end
 end
 
+if __FILE__ == $PROGRAM_NAME
 e = Encrypt.new
 e.encrypt
-puts "Created 'encrypted.txt' with the key #{e.key} and date #{e.date}"
+  if ARGV[0] == nil
+    ARGV[0] = 'message.txt'
+  end
+  if ARGV[1] == nil
+    ARGV[1] = 'encrypted.txt'
+  end
+puts "Created #{ARGV[1]} from #{ARGV[0]} with the key #{e.key} and date #{e.date}"
+end

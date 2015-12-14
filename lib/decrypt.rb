@@ -45,3 +45,19 @@ class Decrypt < Encrypt
     end
   end
 end
+
+if __FILE__ == $PROGRAM_NAME
+e = Decrypt.new
+e.encrypt
+e.decrypt
+  if ARGV[0] == nil
+    ARGV[0] = 'message.txt'
+  end
+  if ARGV[1] == nil
+    ARGV[1] = 'encrypted.txt'
+  end
+  if ARGV[2] == nil
+    ARGV[2] = 'decrypted.txt'
+  end
+puts "Created #{ARGV[2]} from #{ARGV[1]} with the key #{e.key} and date #{e.date}"
+end
