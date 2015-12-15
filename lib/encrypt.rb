@@ -22,6 +22,7 @@ class Encrypt
   end
 
   def key_encrypt(key)
+    key = key.to_s
     a = key[0..1].to_i
     b = key[1..2].to_i
     c = key[2..3].to_i
