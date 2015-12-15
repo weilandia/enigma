@@ -3,14 +3,16 @@
 class Encrypt
   attr_reader :key, :date
   def initialize
-    @set = "abcdefghijklmnopqrstuvwxyz0123456789 .,!@#$%^&*()[]<>;:/?\\\|"
+    @set = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 .,!@#$%^&*()[]<>;:/?\\\|\'"
+    # "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 .,!@#$%^&*()[]<>;:/?\\\|\'"
+    # "abcdefghijklmnopqrstuvwxyz0123456789 .,!@#$%^&*()[]<>;:/?\\\|"
   end
 
 # Testing Key: 37621, Testing Date: 121015
   def encrypt(message = input_message, key = rand.to_s[2..6], date = Time.now.strftime("%-m%d%y").to_i)
-    @key = key.to_i
+    @key = key
     @date = date
-    rotation_array = rotation_engine(key_encrypt(key),date_encrypt(date))
+    rotation_array = rotation_engine(key_encrypt(key.to_s),date_encrypt(date))
     encrypt_i = set_index_translation(message)
     rotated_message = rotate(encrypt_i, rotation_array)
     encrypt_ii = realign_array(rotated_message)
@@ -40,37 +42,37 @@ class Encrypt
 
   def set_index_translation(message)
     set_indices = []
-    message.downcase.split("").map do |letter|
+    message.split("").map do |letter|
       set_indices << @set.index(letter)
     end
     set_indices
   end
 
-  def rotate(index_translation, rotation)
+  def rotate(encrypt_i, rotation_array)
 
-    ac = index_translation.select.with_index do |x,i|
+    ac = encrypt_i.select.with_index do |x,i|
       x if i % 2 == 0
     end
 
-    bd = index_translation.select.with_index do |x,i|
+    bd = encrypt_i.select.with_index do |x,i|
       x if i % 2 != 0
     end
 
     a = ac.select.with_index do |x,i|
       x if i % 2 == 0
-    end.map! {|x| x + rotation[0]}
+    end.map! {|x| x + rotation_array[0]}
 
     b = bd.select.with_index do |x,i|
       x if i % 2 == 0
-    end.map! {|x| x + rotation[1]}
+    end.map! {|x| x + rotation_array[1]}
 
     c = ac.select.with_index do |x,i|
       x if i % 2 != 0
-    end.map! {|x| x + rotation[2]}
+    end.map! {|x| x + rotation_array[2]}
 
     d = bd.select.with_index do |x,i|
       x if i % 2 != 0
-    end.map! {|x| x + rotation[3]}
+    end.map! {|x| x + rotation_array[3]}
 
     rotated_message = [a, b, c, d]
     rotated_message
@@ -101,11 +103,11 @@ class Encrypt
   def third_encryption(encrypt_ii)
     encrypt_iii = []
     encrypt_iii = encrypt_ii.map do |number|
-      # 59,60 with extra characters, 38,39 without
-      if number <= 58
+      # 85,86 with caps, 58,59 with extension characters, 38,39 without
+      if number <= 85
         number
       else
-        number % 59
+        number % 86
       end
     end
     encrypt_iii
@@ -144,12 +146,7 @@ end
 
 if __FILE__ == $PROGRAM_NAME
 e = Encrypt.new
-e.encrypt
-  if ARGV[0] == nil
-    ARGV[0] = 'message.txt'
-  end
-  if ARGV[1] == nil
-    ARGV[1] = 'encrypted.txt'
-  end
+e.encrypt(File.read(ARGV[0]))
+
 puts "Created #{ARGV[1]} from #{ARGV[0]} with the key #{e.key} and date #{e.date}"
 end
