@@ -1,6 +1,6 @@
 language: ruby
 script: bundle exec mrspec --color
 rvm: 2.2.2
-    code_climate:
-      repo_token:
+    # code_climate:
+    #   repo_token:
 # uncomment this line if your project needs to run something other than `rake`:
