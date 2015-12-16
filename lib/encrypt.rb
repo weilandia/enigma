@@ -38,6 +38,13 @@ class Encrypt
 
   def rotation_engine(key_offset,date_offset)
     rotation_array = key_offset.zip(date_offset).map {|i| i.inject(:+)}
+    rotation_array = rotation_array.map do |i|
+      if i <= 85
+        i
+      else
+        i % 86
+      end
+    end
     rotation_array
   end
 
@@ -104,7 +111,7 @@ class Encrypt
   def third_encryption(encrypt_ii)
     encrypt_iii = []
     encrypt_iii = encrypt_ii.map do |number|
-      # 85,86 with caps, 58,59 with extension characters, 38,39 without
+      # modulos (v1):85,86 with caps, 58,59 with extension characters, 38,39 without
       if number <= 85
         number
       else

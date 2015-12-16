@@ -1,0 +1,19 @@
+Starting analysis
+
+== lib/crack.rb (5 issues) ==
+5: Unused method argument - `date`. If it's necessary, use `_` or `_date` as an argument name to indicate that it won't be used. [rubocop]
+13-31: Assignment Branch Condition size for crack_array_and_key is too high. [26.48/20] [rubocop]
+33-53: Assignment Branch Condition size for crack_rotation is too high. [20.83/20] [rubocop]
+43: `end` at 43, 5 is not aligned with `4.times do` at 36, 4. [rubocop]
+80: Similar code found in 1 other location [duplication]
+
+== lib/decrypt.rb (1 issue) ==
+36-40: Similar code found in 1 other location [duplication]
+
+== lib/encrypt.rb (4 issues) ==
+59-87: Assignment Branch Condition size for rotate is too high. [37.16/20] [rubocop]
+69-71: Similar code found in 3 other locations [duplication]
+112: Useless assignment to variable - `encrypt_iii`. Did you mean `encrypt_ii`? [rubocop]
+128: `end` at 128, 6 is not aligned with `set_index_message.map do |number|` at 126, 4. [rubocop]
+
+Analysis complete! Found 10 issues.

@@ -1,0 +1,28 @@
+---
+engines:
+  csslint:
+    enabled: false
+  duplication:
+    enabled: true
+    config:
+      languages:
+      - ruby
+  eslint:
+    enabled: false
+  fixme:
+    enabled: false
+  rubocop:
+    enabled: true
+ratings:
+  paths:
+  - "**.css"
+  - "**.inc"
+  - "**.js"
+  - "**.jsx"
+  - "**.module"
+  - "**.php"
+  - "**.py"
+  - "**.rb"
+exclude_paths:
+- spec/**/*
+- coverage/**/*

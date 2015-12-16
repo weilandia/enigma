@@ -1,3 +1,5 @@
+require 'simplecov'
+SimpleCov.start
 require 'minitest/autorun'
 require 'minitest/pride'
 require_relative '../lib/crack'
@@ -15,16 +17,12 @@ class CrackTest < Minitest::Test
     assert_equal File.read("encrypted.txt"), @e.input_encryption
   end
 
-  def test_identify_crack_characters
-    @e.encrypt(@message,@key,@date)
-    encryption = @e.input_encryption
-    require "pry"; binding.pry
-    assert_equal [["?", 9], [">", 10], ["u", 11], ["J", 12]], @e.identify_message_length_offset(encryption)
+  def test_crack_array_and_key
+    assert_equal [[66, 82, 78, 20], [4, 13, 3, 63]], @e.crack_array_and_key(@e.encrypt(@message,@key,@date))
   end
 
-  def test_crack_rotations
-    skip
-    assert_equal [], @e.crack_rotations([["?", 9], [">", 10], ["u", 11], ["J", 12]])
+  def test_crack_rotation
+    assert_equal @e.rotation_engine(@e.key_encrypt("56738"),@e.date_encrypt(121215)), @e.crack_rotation([66, 82, 78, 20], [4, 13, 3, 63])
   end
 
   def test_crack
