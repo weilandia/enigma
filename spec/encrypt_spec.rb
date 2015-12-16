@@ -45,7 +45,6 @@ class EncryptTest < Minitest::Test
   end
 
   def test_encrypt
-    require "pry"; binding.pry
     assert_equal "y(ZT ?Z5[:nt:(;t ThY]ait!<h  ?<VM%?V *0", @e.encrypt(@message, @key, @date)
   end
 end

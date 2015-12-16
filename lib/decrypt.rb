@@ -1,6 +1,5 @@
 require_relative '../lib/encrypt'
 
-
 class Decrypt < Encrypt
 
   def decrypt(encryption = input_encryption, key = @key.to_s, date = @date)
@@ -30,7 +29,7 @@ class Decrypt < Encrypt
   end
 
   def input_encryption
-    File.read("encrypted.txt")
+      File.read("encrypted.txt")
   end
 
   def output_decryption(decrypted_message)
@@ -41,10 +40,10 @@ class Decrypt < Encrypt
     end
   end
 end
-
-if __FILE__ == $PROGRAM_NAME
-e = Decrypt.new
-e.encrypt
-e.decrypt(File.read(ARGV[0]),ARGV[2])
-puts "Created #{ARGV[1]} from #{ARGV[0]} with the key #{ARGV[2]} and date #{e.date}"
-end
+# 
+# if __FILE__ == $PROGRAM_NAME
+# e = Decrypt.new
+# e.encrypt
+# e.decrypt(File.read(ARGV[0]),ARGV[2])
+# puts "Created #{ARGV[1]} from #{ARGV[0]} with the key #{ARGV[2]} and date #{ARGV[3]}"
+# end

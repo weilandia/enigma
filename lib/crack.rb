@@ -1,14 +1,14 @@
 require_relative '../lib/decrypt'
 
 class Crack < Decrypt
+  attr_reader :cracked_key
 
   def crack(encryption = input_encryption, date = Time.now.strftime("%-m%d%y").to_i)
     (crack_array, crack_key) = crack_array_and_key(encryption)
     encryption_rotation = crack_rotation(crack_array, crack_key)
-    cracked_key_array =  crack_key_array(encryption_rotation)
-    formatted_cracked_key = cracked_key_array_format(cracked_key_array)
-    cracked_key = crack_key(formatted_cracked_key)
-    cracked_key
+    key = find_key(encryption_rotation)
+    output_cracked_code(encryption, key, date)
+    @cracked_key = key
   end
 
   def crack_array_and_key(encryption)
@@ -53,52 +53,124 @@ class Crack < Decrypt
      end
   end
 
-  def crack_key_array(encryption_rotation)
-    cracked_key_array = encryption_rotation.zip(date_encrypt(@date)).map {|i| i.inject(:-)}
-    cracked_key_array
+  def find_key(encryption_rotation)
+    key = find_key_five_digits(encryption_rotation)
+    key = find_key_four_digits(encryption_rotation) if key.to_s.length == 4
+    key = find_key_three_digits(encryption_rotation) if key.to_s.length == 3
+    key = find_key_two_digits(encryption_rotation) if key.to_s.length == 2
+    key = find_key_one_digit(encryption_rotation) if key.to_s.length == 1
+    format_cracked_key(key)
   end
 
-  def find_key(encryption_rotation)
+  def format_cracked_key(key)
+    key = key.to_s
+    if key.length == 1
+      key = "0000" + key
+    elsif key.length == 2
+      key = "000" + key
+    elsif key.length == 3
+      key = "00" + key
+    elsif key.length == 4
+      key = "0" + key
+    else
+      key
+    end
+    key
+  end
+
+  def find_key_five_digits(encryption_rotation)
     key = 99999
-    until rotation_engine(key_encrypt(key),date_encrypt(@date)) == encryption_rotation
+
+    until   rotation_engine(key_encrypt(key),date_encrypt(@date)) == encryption_rotation || key == 9999
       key -= 1
     end
     key
   end
 
-  def cracked_key_array_format(cracked_key_array)
-    cracked_key_array = cracked_key_array.map do |n|
-      if n < 0
-        n += 86
-        n.to_s
-      else
-        n.to_s
-      end
+  def find_key_four_digits(encryption_rotation)
+    key = 9999
+    until  rotation_engine(crack_key_encrypt_two(key),date_encrypt(@date)) == encryption_rotation || key == 999
+      key -= 1
     end
-    formatted_cracked_key = cracked_key_array.map do |n|
-      if n.length == 1 then n = "0" + n else n
-      end
-    end
-    formatted_cracked_key
+    key
   end
 
-  def crack_key(formatted_cracked_key)
-    cracked_key =  formatted_cracked_key.join("").split("").select.with_index do |x,i|
-      x if i == 0 || i % 2 != 0
-    end.join("").to_i
-    cracked_key
+  def crack_key_encrypt_two(key)
+    key = key.to_s
+    a = key[0].to_i
+    b = key[0..1].to_i
+    c = key[1..2].to_i
+    d = key[2..3].to_i
+    key_offset = [a,b,c,d]
+    key_offset
+  end
+
+  def find_key_three_digits(encryption_rotation)
+    key = 999
+    until  rotation_engine(crack_key_encrypt_three(key),date_encrypt(@date)) == encryption_rotation || key == 99
+      key -= 1
+    end
+    key
+  end
+
+  def find_key_two_digits(encryption_rotation)
+    key = 99
+    until  rotation_engine(crack_key_encrypt_four(key),date_encrypt(@date)) == encryption_rotation || key == 10
+      key -= 1
+    end
+    key
+  end
+
+  def find_key_one_digit(encryption_rotation)
+    until  rotation_engine(crack_key_encrypt_four(key),date_encrypt(@date)) == encryption_rotation || key == 0
+      key -= 1
+    end
+    key
+  end
+
+  def crack_key_encrypt_three(key)
+    key = key.to_s
+    a = 0
+    b = key[0].to_i
+    c = key[0..1].to_i
+    d = key[1..2].to_i
+    key_offset = [a,b,c,d]
+    key_offset
+  end
+
+  def crack_key_encrypt_four(key)
+    key = key.to_s
+    a = 0
+    b = 0
+    c = 0
+    d = key[0..1].to_i
+    key_offset = [a,b,c,d]
+    key_offset
+  end
+
+  def crack_key_encrypt_five(key)
+    key = key.to_s
+    a = 0
+    b = 0
+    c = 0
+    d = key[0].to_i
+    key_offset = [a,b,c,d]
+    key_offset
+  end
+
+  def output_cracked_code(encryption, key, date)
+    cracked_message = decrypt(encryption, key, date)
+    if ARGV[1] == nil
+      File.write("cracked.txt", cracked_message)
+    else
+      File.write(ARGV[1], cracked_message)
+    end
   end
 end
-
-
-if __FILE__ == $PROGRAM_NAME
-e = Crack.new
-e.crack
-  if ARGV[0] == nil
-    ARGV[0] = 'encrypted.txt'
-  end
-  if ARGV[1] == nil
-    ARGV[1] = 'cracked.txt'
-  end
-puts "Created #{ARGV[1]} from #{ARGV[0]} with the cracked key #{e.key} and date #{e.date}"
-end
+#
+# if __FILE__ == $PROGRAM_NAME
+# e = Crack.new
+# e.encrypt
+# e.crack(File.read(ARGV[0]), ARGV[2])
+# puts "Created #{ARGV[1]} from #{ARGV[0]} with the cracked key #{e.cracked_key} and date #{ARGV[2]}"
+# end

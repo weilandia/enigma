@@ -154,7 +154,7 @@ end
 
 if __FILE__ == $PROGRAM_NAME
 e = Encrypt.new
-e.encrypt(File.read(ARGV[0]))
+e.encrypt
 
 puts "Created #{ARGV[1]} from #{ARGV[0]} with the key #{e.key} and date #{e.date}"
 end
