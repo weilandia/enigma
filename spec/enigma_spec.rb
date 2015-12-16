@@ -6,7 +6,7 @@ require_relative '../lib/encrypt'
 class EnigmaTest < Minitest::Test
 
   def test_integration
-    require "pry"; binding.pry
+  
   end
 
 end
