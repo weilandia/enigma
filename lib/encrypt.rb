@@ -96,8 +96,7 @@ class Encrypt
     third = second.each_with_index.map do |x,i|
       [x,rotated_message[3][i]]
     end
-
-    encrypt_ii = third.flatten.compact
+    third.flatten.compact
   end
 
   def third_encryption(encrypt_ii)

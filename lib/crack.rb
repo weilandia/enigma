@@ -3,7 +3,7 @@ require_relative '../lib/decrypt'
 class Crack < Decrypt
   attr_reader :cracked_key
 
-  def crack(encryption = input_encryption, date = Time.now.strftime("%-m%d%y").to_i)
+  def crack(encryption = input_encryption)
     (crack_array, crack_key) = crack_array_and_key(encryption)
     encryption_rotation = crack_rotation(crack_array, crack_key)
     key = find_key(encryption_rotation)
@@ -43,13 +43,13 @@ class Crack < Decrypt
          encryption_rotation << crack_array[element] - crack_key[element]
        end
        element += 1
-     end
-     encryption_rotation = encryption_rotation.map do |i|
-       if i < 0 then i + 86
-       elsif i < 86 then i
-       else i % 86
-       end
-     end
+    end
+    encryption_rotation = encryption_rotation.map do |i|
+      if i < 0 then i + 86
+      elsif i < 86 then i
+      else i % 86
+      end
+    end
   end
 
   def find_key(encryption_rotation)
