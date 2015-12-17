@@ -45,12 +45,9 @@ class Crack < Decrypt
        element += 1
      end
      encryption_rotation = encryption_rotation.map do |i|
-       if i < 0
-         i + 86
-       elsif i < 86
-         i
-       else
-         i % 86
+       if i < 0 then i + 86
+       elsif i < 86 then i
+       else i % 86
        end
      end
   end
@@ -74,16 +71,14 @@ class Crack < Decrypt
       key = "00" + key
     elsif key.length == 4
       key = "0" + key
-    else
-      key
+    else key
     end
     key
   end
 
   def find_key_five_digits(encryption_rotation)
     key = 99999
-
-    until   rotation_engine(key_encrypt(key),date_encrypt(@date)) == encryption_rotation || key == 9999
+    until rotation_engine(key_encrypt(key),date_encrypt(@date)) == encryption_rotation || key == 9999
       key -= 1
     end
     key
@@ -91,7 +86,31 @@ class Crack < Decrypt
 
   def find_key_four_digits(encryption_rotation)
     key = 9999
-    until  rotation_engine(crack_key_encrypt_two(key),date_encrypt(@date)) == encryption_rotation || key == 999
+    until rotation_engine(crack_key_encrypt_two(key),date_encrypt(@date)) == encryption_rotation || key == 999
+      key -= 1
+    end
+    key
+  end
+
+  def find_key_three_digits(encryption_rotation)
+    key = 999
+    until  rotation_engine(crack_key_encrypt_three(key),date_encrypt(@date)) == encryption_rotation || key == 99
+      key -= 1
+    end
+    key
+  end
+
+  def find_key_two_digits(encryption_rotation)
+    key = 99
+    until rotation_engine(crack_key_encrypt_four(key),date_encrypt(@date)) == encryption_rotation || key == 9
+      key -= 1
+    end
+    key
+  end
+
+  def find_key_one_digit(encryption_rotation)
+    key = 9
+    until  rotation_engine(crack_key_encrypt_five(key),date_encrypt(@date)) == encryption_rotation || key == 0
       key -= 1
     end
     key
@@ -105,29 +124,6 @@ class Crack < Decrypt
     d = key[2..3].to_i
     key_offset = [a,b,c,d]
     key_offset
-  end
-
-  def find_key_three_digits(encryption_rotation)
-    key = 999
-    until  rotation_engine(crack_key_encrypt_three(key),date_encrypt(@date)) == encryption_rotation || key == 99
-      key -= 1
-    end
-    key
-  end
-
-  def find_key_two_digits(encryption_rotation)
-    key = 99
-    until  rotation_engine(crack_key_encrypt_four(key),date_encrypt(@date)) == encryption_rotation || key == 10
-      key -= 1
-    end
-    key
-  end
-
-  def find_key_one_digit(encryption_rotation)
-    until  rotation_engine(crack_key_encrypt_four(key),date_encrypt(@date)) == encryption_rotation || key == 0
-      key -= 1
-    end
-    key
   end
 
   def crack_key_encrypt_three(key)
@@ -144,7 +140,7 @@ class Crack < Decrypt
     key = key.to_s
     a = 0
     b = 0
-    c = 0
+    c = key[0].to_i
     d = key[0..1].to_i
     key_offset = [a,b,c,d]
     key_offset

@@ -12,6 +12,11 @@ class DecryptTest < Minitest::Test
     @date = 121215
   end
 
+  def test_input_encryption
+    encryption = @e.encrypt(@message,@key,@date)
+    assert_equal encryption, @e.input_encryption
+  end
+
   def test_first_decryption
     assert_equal [9,73,0,54,76], @e.set_index_translation(@e.encrypt(@message,@key,@date))
   end
@@ -39,5 +44,11 @@ class DecryptTest < Minitest::Test
   def test_decrypt
     encryption = @e.encrypt("The Sun Also Rises", "58374", 123015)
     assert_equal "The Sun Also Rises", @e.decrypt(encryption, "58374", 123015)
+  end
+
+  def test_output_decryption
+    @e.encrypt(@message, @key, @date)
+    @e.decrypt
+    assert_equal "Hello", File.read('decrypted.txt')
   end
 end

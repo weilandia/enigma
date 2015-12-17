@@ -5,7 +5,4 @@ require_relative '../lib/encrypt'
 
 class EnigmaTest < Minitest::Test
 
-  def test_integration
-  end
-
 end

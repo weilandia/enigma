@@ -25,6 +25,10 @@ class CrackTest < Minitest::Test
     assert_equal @e.rotation_engine(@e.key_encrypt("56738"),@e.date_encrypt(121215)), @e.crack_rotation([66, 82, 78, 20], [4, 13, 3, 63])
   end
 
+  def test_format_cracked_key
+    assert_equal "00023", @e.format_cracked_key(23)
+  end
+
   def test_crack_key_encrypt_two
     assert_equal [1, 10, 1, 10], @e.crack_key_encrypt_two(1010)
   end
@@ -34,15 +38,30 @@ class CrackTest < Minitest::Test
   end
 
   def test_crack_key_encrypt_four
-    assert_equal [0, 0, 0, 11], @e.crack_key_encrypt_four(11)
+    assert_equal [0, 0, 1, 11], @e.crack_key_encrypt_four(11)
   end
 
   def test_crack_key_encrypt_five
-    assert_equal [0, 0, 0, 1], @e.crack_key_encrypt_four(1)
+    assert_equal [0, 0, 0, 1], @e.crack_key_encrypt_five(1)
   end
 
   def test_crack
-    skip
+    assert_equal "56738", @e.crack(@e.encrypt(@message,@key,@date))
   end
 
+  def test_crack_exact_zero
+    assert_equal "03384", @e.crack(@e.encrypt(@message,"03384",@date))
+  end
+
+  def test_crack_exact_two_zeros
+    assert_equal "00767", @e.crack(@e.encrypt(@message,"00767",@date))
+  end
+
+  def test_crack_exact_three_zeros
+    assert_equal "00074", @e.crack(@e.encrypt(@message,"00074",@date))
+  end
+
+  def test_crack_exact_four_zeros
+    assert_equal "00004", @e.crack(@e.encrypt(@message,"00004",@date))
+  end
 end
