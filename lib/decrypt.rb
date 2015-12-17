@@ -35,11 +35,10 @@ class Decrypt < Encrypt
   end
 end
 
-# ruby ./lib/decrypt.rb encrypted.txt decrypted.txt [key] [date]
+# ruby ./lib/decrypt.rb encrypted.txt decrypted.txt "75846" 121616
 if __FILE__ == $PROGRAM_NAME
 e = Decrypt.new
-e.encrypt
-e.decrypt
+e.decrypt(e.encrypt(File.read('message.txt'), ARGV[2], ARGV[3].to_i))
   if ARGV[0] == nil
     puts "Created 'decrypted.txt' from 'encrypted.txt' with the key #{e.key} and date #{e.date}"
   else
