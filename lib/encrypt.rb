@@ -1,11 +1,7 @@
-
-# Extra characters: !@#$%^&*()[],.<>;:/?\\\|'
 class Encrypt
   attr_reader :key, :date
   def initialize
     @set = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 .,!@#$%^&*()[]<>;:/?\\\|\'"
-    # "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 .,!@#$%^&*()[]<>;:/?\\\|\'"
-    # "abcdefghijklmnopqrstuvwxyz0123456789 .,!@#$%^&*()[]<>;:/?\\\|"
   end
 
 # Testing Key: 37621, Testing Date: 121015
@@ -18,7 +14,15 @@ class Encrypt
     encrypt_ii = realign_array(rotated_message)
     encrypt_iii = third_encryption(encrypt_ii)
     encrypt_iv = set_translate(encrypt_iii)
-    fourth_encryption(encrypt_iv)
+    output_message(encrypt_iv)
+  end
+
+  def input_message
+    if ARGV[0] == nil
+      File.read("message.txt")
+    else
+      File.read(ARGV[0])
+    end
   end
 
   def key_encrypt(key)
@@ -39,32 +43,22 @@ class Encrypt
   def rotation_engine(key_offset,date_offset)
     rotation_array = key_offset.zip(date_offset).map {|i| i.inject(:+)}
     rotation_array = rotation_array.map do |i|
-      if i <= 85
-        i
-      else
-        i % 86
-      end
+      if i <= 85 then i else i % 86 end
     end
     rotation_array
   end
 
   def set_index_translation(message)
-    set_indices = []
-    message.split("").map do |letter|
-      set_indices << @set.index(letter)
+    set_indices = message.split("").map do |letter|
+      @set.index(letter)
     end
     set_indices
   end
 
   def rotate(encrypt_i, rotation_array)
+    ac = encrypt_i.select.with_index { |x,i| x if i % 2 == 0 }
 
-    ac = encrypt_i.select.with_index do |x,i|
-      x if i % 2 == 0
-    end
-
-    bd = encrypt_i.select.with_index do |x,i|
-      x if i % 2 != 0
-    end
+    bd = encrypt_i.select.with_index { |x,i| x if i % 2 != 0 }
 
     a = ac.select.with_index do |x,i|
       x if i % 2 == 0
@@ -87,10 +81,8 @@ class Encrypt
   end
 
   def realign_array(rotated_message)
-    encrypt_ii = []
-
-    rotated_message[0].each do |x|
-      encrypt_ii << x
+    encrypt_ii = rotated_message[0].each do |x|
+      [] << x
     end
 
     first = encrypt_ii.each_with_index.map do |x, i|
@@ -109,52 +101,38 @@ class Encrypt
   end
 
   def third_encryption(encrypt_ii)
-    encrypt_iii = []
     encrypt_iii = encrypt_ii.map do |number|
-      # modulos (v1):85,86 with caps, 58,59 with extension characters, 38,39 without
-      if number <= 85
-        number
-      else
-        number % 86
+      if number <= 85 then number
+      else number % 86
       end
     end
     encrypt_iii
   end
 
   def set_translate(set_index_message)
-    set_translate = []
-    set_index_message.map do |number|
-      set_translate << @set[number]
-      end
-    message = set_translate.join("")
-    message
+    set_translate = set_index_message.map do |number|
+      @set[number]
+    end.join("")
+    set_translate
   end
 
-  def fourth_encryption(message)
-    output_encryption(message)
-    message
-  end
-
-  def input_message
-    if ARGV[0] == nil
-      File.read("message.txt")
-    else
-      File.read(ARGV[0])
-    end
-  end
-
-  def output_encryption(encrypted_message)
+  def output_message(set_translate)
     if ARGV[1] == nil
-      File.write("encrypted.txt", encrypted_message)
+      File.write("encrypted.txt", set_translate)
     else
-      File.write(ARGV[1], encrypted_message)
+      File.write(ARGV[1], set_translate)
     end
+    set_translate
   end
 end
 
+# ruby ./lib/encrypt.rb message.txt encrypted.txt
 if __FILE__ == $PROGRAM_NAME
 e = Encrypt.new
 e.encrypt
-
-puts "Created #{ARGV[1]} from #{ARGV[0]} with the key #{e.key} and date #{e.date}"
+  if ARGV[0] == nil
+    puts "Created 'encrypted.txt' from 'message.txt' with the key #{e.key} and date #{e.date}"
+  else
+    puts "Created #{ARGV[1]} from #{ARGV[0]} with the key #{e.key} and date #{e.date}"
+  end
 end

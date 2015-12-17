@@ -14,10 +14,8 @@ class Decrypt < Encrypt
 
   def reverse_rotation_engine(rotation_array)
     reverse_rotation_array = rotation_array.map do |number|
-      if number <= 85
-        number * (-1)
-      else
-        number % 86 * (-1)
+      if number <= 85 then number * (-1)
+      else number % 86 * (-1)
       end
     end
     reverse_rotation_array
@@ -29,7 +27,11 @@ class Decrypt < Encrypt
   end
 
   def input_encryption
-      File.read("encrypted.txt")
+      if ARGV[0] == nil
+        File.read("encrypted.txt")
+      else
+        File.read(ARGV[0])
+      end
   end
 
   def output_decryption(decrypted_message)
@@ -40,10 +42,15 @@ class Decrypt < Encrypt
     end
   end
 end
-# 
-# if __FILE__ == $PROGRAM_NAME
-# e = Decrypt.new
-# e.encrypt
-# e.decrypt(File.read(ARGV[0]),ARGV[2])
-# puts "Created #{ARGV[1]} from #{ARGV[0]} with the key #{ARGV[2]} and date #{ARGV[3]}"
-# end
+
+# ruby ./lib/decrypt.rb encrypted.txt decrypted.txt [key] [date]
+if __FILE__ == $PROGRAM_NAME
+e = Decrypt.new
+e.encrypt
+e.decrypt
+  if ARGV[0] == nil
+    puts "Created 'decrypted.txt' from 'encrypted.txt' with the key #{e.key} and date #{e.date}"
+  else
+    puts "Created #{ARGV[1]} from #{ARGV[0]} with the key #{ARGV[2]} and date #{ARGV[3]}"
+  end
+end

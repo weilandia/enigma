@@ -16,6 +16,10 @@ class EncryptTest < Minitest::Test
     assert_equal [56,67,73,38], @e.key_encrypt(@key)
   end
 
+  def test_key_encrypt_zeros
+    assert_equal [00,01,10,00], @e.key_encrypt("00100")
+  end
+
   def test_date_encrypt
     assert_equal [6,2,2,5], @e.date_encrypt(@date)
   end
@@ -24,7 +28,7 @@ class EncryptTest < Minitest::Test
     assert_equal [62,69,75,43], @e.rotation_engine([56,67,73,38], [6,2,2,5])
   end
 
-  def test_first_encryption
+  def test_set_index_translation
     assert_equal [33,4,11,11,14], @e.set_index_translation("Hello")
   end
 
@@ -42,6 +46,11 @@ class EncryptTest < Minitest::Test
 
   def test_set_translate
     assert_equal "j(a2]", @e.set_translate([9,73,0,54,76])
+  end
+
+  def test_output_message
+    @e.encrypt(@message, @key, @date)
+    assert_equal "y(ZT ?Z5[:nt:(;t ThY]ait!<h  ?<VM%?V *0", File.read('encrypted.txt')
   end
 
   def test_encrypt

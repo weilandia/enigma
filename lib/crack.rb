@@ -7,8 +7,10 @@ class Crack < Decrypt
     (crack_array, crack_key) = crack_array_and_key(encryption)
     encryption_rotation = crack_rotation(crack_array, crack_key)
     key = find_key(encryption_rotation)
-    output_cracked_code(encryption, key, date)
     @cracked_key = key
+    cracked_message = crack_message(encryption)
+    output_cracked_code(cracked_message)
+    key
   end
 
   def crack_array_and_key(encryption)
@@ -158,8 +160,12 @@ class Crack < Decrypt
     key_offset
   end
 
-  def output_cracked_code(encryption, key, date)
-    cracked_message = decrypt(encryption, key, date)
+  def crack_message(encryption)
+    decrypt(encryption,@cracked_key,@date)
+  end
+
+
+  def output_cracked_code(cracked_message)
     if ARGV[1] == nil
       File.write("cracked.txt", cracked_message)
     else
@@ -167,10 +173,15 @@ class Crack < Decrypt
     end
   end
 end
-#
-# if __FILE__ == $PROGRAM_NAME
-# e = Crack.new
-# e.encrypt
-# e.crack(File.read(ARGV[0]), ARGV[2])
-# puts "Created #{ARGV[1]} from #{ARGV[0]} with the cracked key #{e.cracked_key} and date #{ARGV[2]}"
-# end
+
+# ruby ./lib/crack.rb encrypted.txt cracked.txt
+if __FILE__ == $PROGRAM_NAME
+e = Crack.new
+e.encrypt
+e.crack
+  if ARGV[1] == nil
+    puts "Created 'cracked.txt' from 'encrypted.txt' with the cracked key #{e.cracked_key} and date #{e.date}"
+  else
+    puts "Created #{ARGV[1]} from #{ARGV[0]} with the cracked key #{e.cracked_key} and date #{e.date}"
+  end
+end
