@@ -2,7 +2,7 @@ require_relative '../lib/encrypt'
 
 class Decrypt < Encrypt
 
-  def decrypt(encryption = input_encryption, key = @key, date = @date)
+  def decrypt(encryption = input_encryption, key = key_input, date = date_input)
     decrypt_i = set_index_translation(encryption)
     rotation_array = rotation_engine(key_encrypt(key),date_encrypt(date))
     reverse_rotation_array = reverse_rotation_engine(rotation_array)
@@ -15,6 +15,18 @@ class Decrypt < Encrypt
   def input_encryption
     if ARGV[0] == nil then File.read("encrypted.txt")
     else File.read(ARGV[0])
+    end
+  end
+
+  def key_input
+    if ARGV[2] == nil then @key
+    else ARGV[2]
+    end
+  end
+
+  def date_input
+    if ARGV[3] == nil then @date
+    else ARGV[3].to_i
     end
   end
 
@@ -38,7 +50,7 @@ end
 # ruby ./lib/decrypt.rb encrypted.txt decrypted.txt "75846" 121616
 if __FILE__ == $PROGRAM_NAME
 e = Decrypt.new
-e.decrypt(e.encrypt(File.read('message.txt'), ARGV[2], ARGV[3].to_i))
+e.decrypt(File.read(ARGV[0]), ARGV[2], ARGV[3].to_i)
   if ARGV[0] == nil
     puts "Created 'decrypted.txt' from 'encrypted.txt' with the key #{e.key} and date #{e.date}"
   else
