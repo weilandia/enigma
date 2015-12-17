@@ -13,7 +13,6 @@ class DecryptTest < Minitest::Test
   end
 
   def test_input_encryption
-    require "pry"; binding.pry
     encryption = @e.encrypt(@message,@key,@date)
     assert_equal encryption, @e.input_encryption
   end
