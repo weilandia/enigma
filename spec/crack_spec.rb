@@ -7,14 +7,10 @@ require_relative '../lib/crack'
 class CrackTest < Minitest::Test
 
   def setup
-    @e = Crack.new
+    @e = Crack.new("Hello ..end..")
     @message = "Hello ..end.."
     @key = "56738"
     @date = 121215
-  end
-
-  def test_read_encryption
-    assert_equal File.read("encrypted.txt"), @e.input_encryption
   end
 
   def test_crack_array_and_key
@@ -46,22 +42,27 @@ class CrackTest < Minitest::Test
   end
 
   def test_crack
-    assert_equal "56738", @e.crack(@e.encrypt(@message,@key,@date))
+    e = Crack.new(@message,"56738",@date)
+    assert_equal "56738", e.crack(e.encrypt)
   end
 
   def test_crack_exact_zero
-    assert_equal "03384", @e.crack(@e.encrypt(@message,"03384",@date))
+    e = Crack.new(@message,"03384",@date)
+    assert_equal "03384", e.crack(e.encrypt)
   end
 
   def test_crack_exact_two_zeros
-    assert_equal "00767", @e.crack(@e.encrypt(@message,"00767",@date))
+    e = Crack.new(@message,"00767",@date)
+    assert_equal "00767", e.crack(e.encrypt)
   end
 
   def test_crack_exact_three_zeros
-    assert_equal "00074", @e.crack(@e.encrypt(@message,"00074",@date))
+    e = Crack.new(@message,"00074",@date)
+    assert_equal "00074", e.crack(e.encrypt)
   end
 
   def test_crack_exact_four_zeros
-    assert_equal "00004", @e.crack(@e.encrypt(@message,"00004",@date))
+    e = Crack.new(@message,"00004",@date)
+    assert_equal "00004", e.crack(e.encrypt)
   end
 end

@@ -6,7 +6,7 @@ require_relative '../lib/encrypt'
 class EncryptTest < Minitest::Test
 
   def setup
-    @e = Encrypt.new
+    @e = Encrypt.new(File.read('message.txt'))
     @message = "We can only see a short distance ahead."
     @key = "56738"
     @date = 121215
@@ -46,11 +46,6 @@ class EncryptTest < Minitest::Test
 
   def test_set_translate
     assert_equal "j(a2]", @e.set_translate([9,73,0,54,76])
-  end
-
-  def test_output_message
-    @e.encrypt(@message, @key, @date)
-    assert_equal "y(ZT ?Z5[:nt:(;t ThY]ait!<h  ?<VM%?V *0", File.read('encrypted.txt')
   end
 
   def test_encrypt

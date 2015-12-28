@@ -1,28 +1,23 @@
 class Encrypt
   attr_reader :key, :date
-  def initialize
+
+  def initialize(message = File.read('message.txt'), key = rand.to_s[2..6], date = Time.now.strftime("%-m%d%y").to_i)
     @set = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 .,!@#$%^&*()[]<>;:/?\\\|\'"
+    @message = message
+    @key = key
+    @date = date
   end
 
 # Testing Key: 37621, Testing Date: 121015
-  def encrypt(message = input_message, key = rand.to_s[2..6], date = Time.now.strftime("%-m%d%y").to_i)
-    @key = key
-    @date = date
+  def encrypt(message = @message, key = @key, date = @date)
     rotation_array = rotation_engine(key_encrypt(key.to_s),date_encrypt(date))
     encrypt_i = set_index_translation(message)
     rotated_message = rotate(encrypt_i, rotation_array)
     encrypt_ii = realign_array(rotated_message)
     encrypt_iii = third_encryption(encrypt_ii)
     encrypt_iv = set_translate(encrypt_iii)
-    output_message(encrypt_iv)
-  end
-
-  def input_message
-    if ARGV[0] == nil
-      File.read("message.txt")
-    else
-      File.read(ARGV[0])
-    end
+    File.write('encrypted.txt',encrypt_iv)
+    @encryption = encrypt_iv
   end
 
   def key_encrypt(key)
@@ -101,9 +96,7 @@ class Encrypt
 
   def third_encryption(encrypt_ii)
     encrypt_iii = encrypt_ii.map do |number|
-      if number <= 85 then number
-      else number % 86
-      end
+      number % 86
     end
     encrypt_iii
   end
@@ -114,24 +107,12 @@ class Encrypt
     end.join("")
     set_translate
   end
-
-  def output_message(set_translate)
-    if ARGV[1] == nil
-      File.write("encrypted.txt", set_translate)
-    else
-      File.write(ARGV[1], set_translate)
-    end
-    set_translate
-  end
 end
+
 
 # ruby ./lib/encrypt.rb message.txt encrypted.txt
 if __FILE__ == $PROGRAM_NAME
-e = Encrypt.new
-e.encrypt
-  if ARGV[0] == nil
-    puts "Created 'encrypted.txt' from 'message.txt' with the key #{e.key} and date #{e.date}"
-  else
-    puts "Created #{ARGV[1]} from #{ARGV[0]} with the key #{e.key} and date #{e.date}"
-  end
+e = Encrypt.new(File.read(ARGV[0]))
+File.write(ARGV[1], e.encrypt(@message,@key,@date))
+puts "Created #{ARGV[1]} from #{ARGV[0]} with the key #{e.key} and date #{e.date}"
 end

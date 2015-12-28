@@ -3,13 +3,13 @@ require_relative '../lib/decrypt'
 class Crack < Decrypt
   attr_reader :cracked_key
 
-  def crack(encryption = input_encryption)
+  def crack(encryption = File.read('encrypted.txt'))
     (crack_array, crack_key) = crack_array_and_key(encryption)
     encryption_rotation = crack_rotation(crack_array, crack_key)
     key = find_key(encryption_rotation)
     @cracked_key = key
     cracked_message = crack_message(encryption)
-    output_cracked_code(cracked_message)
+    File.write('cracked.txt', cracked_message)
     key
   end
 
@@ -159,25 +159,12 @@ class Crack < Decrypt
   def crack_message(encryption)
     decrypt(encryption,@cracked_key,@date)
   end
-
-
-  def output_cracked_code(cracked_message)
-    if ARGV[1] == nil
-      File.write("cracked.txt", cracked_message)
-    else
-      File.write(ARGV[1], cracked_message)
-    end
-  end
 end
 
 # ruby ./lib/crack.rb encrypted.txt cracked.txt
 if __FILE__ == $PROGRAM_NAME
-e = Crack.new
-e.encrypt
-e.crack
-  if ARGV[1] == nil
-    puts "Created 'cracked.txt' from 'encrypted.txt' with the cracked key #{e.cracked_key} and date #{e.date}"
-  else
-    puts "Created #{ARGV[1]} from #{ARGV[0]} with the cracked key #{e.cracked_key} and date #{e.date}"
-  end
+e = Crack.new(File.read('message.txt'), ARGV[2], ARGV[3].to_i)
+File.write(ARGV[0], e.encrypt(@message,@key,@date))
+File.write(ARGV[1], e.crack)
+puts "Created #{ARGV[1]} from #{ARGV[0]} with the cracked key #{e.cracked_key} and date #{e.date}"
 end
