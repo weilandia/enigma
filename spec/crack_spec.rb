@@ -40,28 +40,37 @@ class CrackTest < Minitest::Test
 
   def test_crack
     encryption = Encrypt.new("Goodbye. ..end..", Key.new(56738), FormattedDate.new(121215)).encrypt
+
     c = Crack.new(encryption, FormattedDate.new(121215))
-    require "pry"; binding.pry
     assert_equal "56738", c.crack
   end
 
   def test_crack_exact_zero
-    e = Crack.new(@message,"03384",@date)
-    assert_equal "03384", e.crack(e.encrypt)
+    encryption = Encrypt.new("Goodbye. ..end..", Key.new("03384"), FormattedDate.new(121215)).encrypt
+
+    c = Crack.new(encryption, FormattedDate.new(121215))
+    assert_equal "03384", c.crack
   end
 
   def test_crack_exact_two_zeros
-    e = Crack.new(@message,"00767",@date)
-    assert_equal "00767", e.crack(e.encrypt)
+    encryption = Encrypt.new("Goodbye. ..end..", Key.new("00767"), FormattedDate.new(121215)).encrypt
+
+    c = Crack.new(encryption, FormattedDate.new(121215))
+    assert_equal "00767", c.crack
   end
 
   def test_crack_exact_three_zeros
-    e = Crack.new(@message,"00074",@date)
-    assert_equal "00074", e.crack(e.encrypt)
+    encryption = Encrypt.new("Goodbye. ..end..", Key.new("00074"), FormattedDate.new(121215)).encrypt
+
+    c = Crack.new(encryption, FormattedDate.new(121215))
+    assert_equal "00074", c.crack
   end
 
   def test_crack_exact_four_zeros
-    e = Crack.new(@message,"00004",@date)
-    assert_equal "00004", e.crack(e.encrypt)
+    encryption = Encrypt.new("Goodbye. ..end..", Key.new("00004"), FormattedDate.new(121215)).encrypt
+
+    c = Crack.new(encryption, FormattedDate.new(121215))
+    assert_equal "00004", c.crack
+
   end
 end

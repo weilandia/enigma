@@ -21,12 +21,12 @@ class Crack < Decrypt
 
     @cracked_key = Key.new(formatted_key)
 
-    @key = @cracked_key
+    @key = @cracked_key.key
 
     @cracked_message = crack_message(encryption)
 
     File.write('cracked.txt', cracked_message)
-    key
+    @key
   end
 
   def use_end_to_identify_rotation_array_and_key(encryption)
