@@ -7,18 +7,15 @@ require_relative '../lib/crack'
 class CrackTest < Minitest::Test
 
   def setup
-    @e = Crack.new("Hello ..end..")
-    @message = "Hello ..end.."
-    @key = "56738"
-    @date = 121215
+    @e = Crack.new("j(a2]T0u@?>uN", FormattedDate.new(121215))
   end
 
-  def test_crack_array_and_key
-    assert_equal [[66, 82, 78, 20], [4, 13, 3, 63]], @e.crack_array_and_key(@e.encrypt(@message,@key,@date))
+  def test_identification_of_rotation_array_and_key
+    assert_equal [[66, 82, 78, 20], [4, 13, 3, 63]], @e.use_end_to_identify_rotation_array_and_key(@e.encryption)
   end
 
   def test_crack_rotation
-    assert_equal @e.rotation_engine(@e.key_encrypt("56738"),@e.date_encrypt(121215)), @e.crack_rotation([66, 82, 78, 20], [4, 13, 3, 63])
+    assert_equal @e.rotate_encrypted_key_and_date([56,67,73,38],[6,2,2,5]), @e.crack_rotation([66, 82, 78, 20], [4, 13, 3, 63])
   end
 
   def test_format_cracked_key
@@ -42,8 +39,10 @@ class CrackTest < Minitest::Test
   end
 
   def test_crack
-    e = Crack.new(@message,"56738",@date)
-    assert_equal "56738", e.crack(e.encrypt)
+    encryption = Encrypt.new("Goodbye. ..end..", Key.new(56738), FormattedDate.new(121215)).encrypt
+    c = Crack.new(encryption, FormattedDate.new(121215))
+    require "pry"; binding.pry
+    assert_equal "56738", c.crack
   end
 
   def test_crack_exact_zero
